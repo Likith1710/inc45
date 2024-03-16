@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  login:
+    image: alpine
+    secrets:
+      - docker_username
+      - docker_password
+    entrypoint: sh -c 'echo "$$(cat /run/secrets/docker_password)" | docker login -u "$$(cat /run/secrets/docker_username)" --password-stdin && tail -f /dev/null'
+
+  goapp:
+    image: likith1710/go-image
+    ports:
+      - "8080:8080"
+    depends_on:
+      - login
+    secrets:
+      - docker_username
+      - docker_password
+
+  nextjs:
+    image: likith1710/nextjs-image
+    ports:
+      - "3000:3000"
+    depends_on:
+      - login
+    secrets:
+      - docker_username
+      - docker_password
+
+  wordpress:
+    image: likith1710/wordpress-image
+    ports:
+      - "80:80"
+    depends_on:
+      - login
+    secrets:
+      - docker_username
+      - docker_password
+
+secrets:
+  docker_username:
+    external: true
+  docker_password:
+    external: true
+
