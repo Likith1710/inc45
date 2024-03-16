@@ -1,0 +1,22 @@
+version: '3'
+services:
+  wordpress:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ./wordpress:/var/www/html
+    depends_on:
+      - phpcs
+
+  phpcs:
+    build: 
+      context: .
+      dockerfile: Dockerfile-phpcs
+    volumes:
+      - ./wordpress:/var/www/html
+    command: >
+      sh -c "phpcs --standard=WordPress /var/www/html"
+

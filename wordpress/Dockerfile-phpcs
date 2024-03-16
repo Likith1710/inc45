@@ -1,0 +1,15 @@
+FROM php:latest
+
+# Install Git, Composer, and PHP_CodeSniffer
+RUN apt-get update && \
+    apt-get install -y git && \
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    composer global require squizlabs/php_codesniffer && \
+    ln -s /root/.composer/vendor/bin/phpcs /usr/local/bin/phpcs
+
+# Install the WordPress Coding Standards
+RUN git clone https://github.com/WordPress/WordPress-Coding-Standards.git /usr/local/wpcs && \
+    composer global require dealerdirect/phpcodesniffer-composer-installer && \
+    composer global require wp-coding-standards/wpcs && \
+    /root/.composer/vendor/bin/phpcs --config-set installed_paths /root/.composer/vendor/wp-coding-standards/wpcs
+
