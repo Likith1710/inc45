@@ -52,8 +52,7 @@ pipeline {
         }
         stage('Compose Build') {
             steps {
-                sh'docker-compose down'
-                sh 'docker-compose up -d'
+                sh'docker stack deploy -c docker-stack.yml my_app'
             }
         }
     }
